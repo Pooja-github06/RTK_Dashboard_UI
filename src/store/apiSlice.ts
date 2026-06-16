@@ -4,6 +4,13 @@ import type { Product, Order, Customer, UserProfile, DashboardStats } from './mo
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return 'Unknown error';
+};
+
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fakeBaseQuery(),
@@ -16,8 +23,8 @@ export const apiSlice = createApi({
           await delay(400);
           const stats = mockDb.getStats();
           return { data: stats };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error:  getErrorMessage(error) } };
         }
       },
       providesTags: ['Stats', 'Products', 'Orders', 'Customers'],
@@ -30,8 +37,8 @@ export const apiSlice = createApi({
           await delay(500);
           const products = mockDb.getProducts();
           return { data: products };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error: getErrorMessage(error) } };
         }
       },
       providesTags: (result) =>
@@ -49,8 +56,8 @@ export const apiSlice = createApi({
             throw new Error(`Product with ID ${id} not found.`);
           }
           return { data: product };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error: getErrorMessage(error) } };
         }
       },
       providesTags: (_result, _error, id) => [{ type: 'Products', id }],
@@ -65,8 +72,8 @@ export const apiSlice = createApi({
           const product: Product = { ...newProduct, id, createdAt };
           mockDb.saveProduct(product);
           return { data: product };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error: getErrorMessage(error) } };
         }
       },
       invalidatesTags: [{ type: 'Products', id: 'LIST' }, 'Stats'],
@@ -78,8 +85,8 @@ export const apiSlice = createApi({
           await delay(600);
           mockDb.saveProduct(updatedProduct);
           return { data: updatedProduct };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error: getErrorMessage(error) } };
         }
       },
       invalidatesTags: (_result, _error, arg) => [
@@ -98,8 +105,8 @@ export const apiSlice = createApi({
             throw new Error(`Failed to delete product ${id}`);
           }
           return { data: true };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error: getErrorMessage(error) } };
         }
       },
       invalidatesTags: [{ type: 'Products', id: 'LIST' }, 'Stats'],
@@ -112,8 +119,8 @@ export const apiSlice = createApi({
           await delay(500);
           const orders = mockDb.getOrders();
           return { data: orders };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error:  getErrorMessage(error) } };
         }
       },
       providesTags: (result) =>
@@ -131,8 +138,8 @@ export const apiSlice = createApi({
             throw new Error(`Order with ID ${id} not found.`);
           }
           return { data: order };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error:  getErrorMessage(error) } };
         }
       },
       providesTags: (_result, _error, id) => [{ type: 'Orders', id }],
@@ -172,8 +179,8 @@ export const apiSlice = createApi({
 
           mockDb.saveOrder(updatedOrder);
           return { data: updatedOrder };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error: getErrorMessage(error) } };
         }
       },
       invalidatesTags: (_result, _error, arg) => [
@@ -191,8 +198,8 @@ export const apiSlice = createApi({
           await delay(400);
           const customers = mockDb.getCustomers();
           return { data: customers };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error:  getErrorMessage(error) } };
         }
       },
       providesTags: ['Customers'],
@@ -205,8 +212,8 @@ export const apiSlice = createApi({
           await delay(300);
           const profile = mockDb.getProfile();
           return { data: profile };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error:  getErrorMessage(error) } };
         }
       },
       providesTags: ['Profile'],
@@ -218,8 +225,8 @@ export const apiSlice = createApi({
           await delay(500);
           mockDb.saveProfile(updatedProfile);
           return { data: updatedProfile };
-        } catch (error: any) {
-          return { error: { status: 'CUSTOM_ERROR', error: error.message } };
+        } catch (error: unknown) {
+          return { error: { status: 'CUSTOM_ERROR', error:  getErrorMessage(error) } };
         }
       },
       invalidatesTags: ['Profile'],
