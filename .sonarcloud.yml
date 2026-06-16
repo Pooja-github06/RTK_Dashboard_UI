@@ -1,0 +1,18 @@
+sonarQubeVersion: LATEST
+projectKey: react-app
+projectName: React App
+sources:
+  - src
+testSources:
+  - src/__tests__
+exclusions:
+  - '**/node_modules/**'
+  - '**/dist/**'
+  - '**/*.test.ts'
+  - '**/*.test.tsx'
+  - '**/coverage/**'
+coverageExclusions:
+  - '**/node_modules/**'
+  - '**/dist/**'
+  - 'src/main.tsx'
+  - 'src/__mocks__/**'
